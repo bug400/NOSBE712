@@ -1,0 +1,1424 @@
+1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                      Pascal-6000 Installation Handbook
+                      =================================
+
+
+                                Dave Bianchi
+                                Jim Miner
+
+                   Academic Computing Services and Systems                   |
+                           University of Minnesota
+
+
+
+
+
+
+
+
+                                 Version 4.1                                 |
+
+                                  May, 1986                                  |
+
+
+
+
+
+ Differences from Version 4.0 are indicated by  change  bars  in  the  right |
+ margin.  An asterisk indicates deleted text.                                |
+
+
+
+
+
+ _________
++COPYRIGHT
+
+ Portions  of  Pascal-6000  Release  4  are  copyright  by the University of
+ Minnesota.  It is not to be sold or distributed without the express written
+ permission  of the University of Minnesota, Academic Computing Services and |
+ Systems.   All  names  and  references  are  to  be   left   intact.    The |
+ machine-retrievable  documention  on  the  release  tape is under a limited
+ copyright.  That is, you are free  to  copy  and  distribute  the  writeups
+ within  your organization providing that it is not done for profit and that
+ all names and references are left intact.
+1
+1
+
+ Pascal-6000 Installation Handbook                                 27 May 86
+
+
+                              Table of Contents
+                              =================
+
+
+ page    section
+
+   1     1.  Introduction
+   1     2.  Maintenance and Support
+   1     3.  Pascal-6000 Revisions
+   2     4.  Tape Contents
+   3     5.  Installation Procedures
+   3         5.1.  Configuring and Accessing the Installation Procedures
+   6         5.2.  The PASINST Installation Procedure                        |
+   6         5.3.  The PASCOMP Installation Procedure
+   7         5.4.  The PASLIST Procedure
+   8     6.  Pascal-6000 Modsets
+   8         6.1.  Modset Format
+   9         6.2.  Local Modsets
+   9         6.3.  Miscellaneous Additional Modsets
+  10     7.  Machine-retrievable Documentation
+  11     8.  The Pascal-6000 Utilities
+  12     9.  Hints and Cautions
+
+ A-1     Appendix A.  The Full-ASCII Version of Pascal-6000
+ A-1         A.1  Features and Restrictions
+ A-2         A.2  Installation
+ A-3         A.3  History and Status
+ A-3         A.4  Character Set Table
+
+ B-1     Appendix B.  Deck Names on Old Program Libraries
+ B-1         B.1  JOLDPL Decks
+ B-2         B.2  COLDPL Decks
+ B-3         B.3  LOLDPL Decks
+ B-5         B.4  UOLDPL Decks
+1
+1
+
+ Pascal-6000 Installation Handbook                                 27 May 86
+
+
+     ____________
++1.  INTRODUCTION
+
+ This handbook describes the  procedures  for  installation  of  Pascal-6000
+ Release 4.
+
+
+     _______________________
++2.  MAINTENANCE AND SUPPORT
+
+ The  University  of  Minnesota  currently  maintains Pascal-6000.  Comments |
+ about Pascal-6000 Release 4 are always welcome.  If you have  any  thoughts
+ about  the  Pascal-6000  compiler,  its  documentation,  the  tools, or the
+ installation jobs, please  let  us  know.   All  comments,  error  reports,
+ corrective  code, etc.  should be addressed to "Pascal-6000" at the address
+ below.
+
+           Pascal-6000
+           Academic Computing Services and Systems                           |
+           University of Minnesota
+           2520 Broadway Drive                                               |
+           St. Paul, MN  55113                                               |
+           U. S. A.
+
+ If you find errors, please observe the following guidelines  for  reporting
+ them.
+
+ 1. Use  a Trouble Report form if available to organize your report.  Copies
+    of this form are included with  the  printed  documentation  distributed
+    with the release tape.
+
+ 2. Try  to  isolate  the  problem  in  as  small a program and data file as
+    possible.
+
+ 3. If the problem cannot be isolated to a VERY small program,  please  send
+    all  materials (program source, data file(s)), etc.) on magnetic tape so
+    that we can study them in detail.
+
+ 4. Please include a telephone number where you can be reached, in case that
+    should be necessary.
+
+ 5. Be sure to send copies of any local modsets that you have applied to the
+    Pascal system (i.e., any modsets that we have not distributed).  Tell us
+    what  version  of  Pascal-6000 you are running (the version is listed at
+    the top of each page of the compilation listing).
+
+
+     _____________________
++3.  PASCAL-6000 REVISIONS
+
+ Revisions to Pascal-6000 Release 4 are supplied by us.  Each revision  will
+ be  sent  out on magnetic tape and will be self-contained.  That is, you no
+ longer need to keep the original compiler around; a new  compiler  will  be
+ sent with each revision.
+
+
+
+
+
+
+
+                                      1
+1
+
+ Pascal-6000 Installation Handbook                                 27 May 86
+
+
+     _____________
++4.  TAPE CONTENTS
+
+ The  Release tape contains two copies of 29 files written with binary (odd)
+ parity.  The following describes the files.
+
+     1 - Sequential OLDPL of Installation Jobs.
+     2 - Sequential OLDPL of the Compiler.
+     3 - Sequential OLDPL of the Extended Library.
+     4 - Sequential OLDPL of Utility Programs.
+     5 - Error Message Text records.
+     6 - Relocatable Binary of the Compiler (Pascal routines).
+     7 - Relocatable Binary of the Library (Pascal routines).
+     8 - Relocatable Binary of the Compiler for SCOPE 2.
+     9 - Relocatable Binary of the Library for SCOPE 2.
+    10 - Printer-ready "Pascal-6000" writeup.
+    11 - Printer-ready "Pascal-6000 Release 4 Upgrade Guide".
+    12 - Printer-ready "Pascal-6000 Library Information".
+    13 - Printer-ready "Pasplot" writeup.
+    14 - Printer-ready "Installation Handbook".
+    15 - Printer-ready "Internal Reference Manual".
+    16 - Printer-ready Utility program writeups.
+    17 - Printer-ready "Prose" writeup.
+    18 - Printer-ready "Summary of Changes".                                 |
+    19 - Source for "Pascal-6000" writeup.
+    20 - Source for "Pascal-6000 Release 4 Upgrade Guide".
+    21 - Source for "Pascal-6000 Library Information".
+    22 - Source for "Pasplot" writeup.
+    23 - Source for "Installation Handbook".
+    24 - Source for "Internal Reference Manual".
+    25 - Source for Utility program writeups.
+    26 - Source for "Prose" writeup.
+    27 - Source for "Summary of Changes".                                    |
+    28 - Miscellaneous Additional Modsets.
+                                                                             *
+    29 - Empty file.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                      2
+1
+
+ Pascal-6000 Installation Handbook                                 27 May 86
+
+
+     _______________________
++5.  INSTALLATION PROCEDURES
+
+ Pascal-6000 Release 4 is designed to be very easy to install on six  target
+ systems:  KRONOS 2.1,  NOS 1,  NOS 2, NOS/BE 1, SCOPE 3.4, and SCOPE 2.  If
+ you are running some other operating system, we  suggest  you  examine  the
+ instructions  and decks for the various systems to configure Pascal to your
+ site.
+
+ The simplest installation has two steps:   (1)  configure  the  procedures, |
+ section  5.1;  and  (2)  access  and submit PASINST, section 5.2.  Only the |
+ files PASCAL and PASCLIB (and PSRCLIB  if  created)  need  be  accessed  by
+ users.
+
+ The  NOS/BE, SCOPE 2 and SCOPE 3.4 jobs use "ID=PASCAL4" for permanent file
+ accesses.
+
+ All of the installation procedures except the ones for NOS/BE 1 and SCOPE 2
+ require  access  to the system OPL or OLDPL containing system common decks.
+ The IPTEXT systems text is required under all the target operating systems.
+ For  KRONOS  and  NOS  we  use  the  common  decks COMCMAC and COMCCMD, for
+ NOS/BE 1 we use ACTCOM and COMSRAS.  The KRONOS procedures use the  COMPASS
+ system  text  overlay  SYSTEXT,  the  NOS  procedures  use  the system text
+ NOSTEXT, the NOS/BE 1 procedures use the system texts CPUTEXT and  PFMTEXT,
+ and  the  SCOPE 3.4  procedures  use  the system text PFMTEXT.  The PASCOMP
+ installation procedure creates a COMPASS system text called PASTEXT.
+
+ There are seven installation procedures (or jobs) on the release  tape  for
+ each  of  the  target systems.  The installation procedures are designed to
+ install the Pascal system  (compiler  and  extended  library)  and  utility
+ programs  under  the  CDC  ASCII subset character set or the CDC Scientific
+ character  set.   The  utility-installation  procedures  are  described  in
+ section  8.   We  leave  the  installation  of  the writeups up to you (see
+ section 7).
+
+ It is possible to modify the installation procedures to be more  compatible
+ with an interactive or console environment.
+
+
+      _____________________________________________________
++5.1  CONFIGURING AND ACCESSING THE INSTALLATION PROCEDURES
+
+ The  first  file  on the tape contains a sequential Update OLDPL containing
+ the installation procedures.  The prefix character for this OLDPL is a plus
+ (+).  That makes it easy to insert modifications for installation.
+
+ The  first  step  in  installation  is  to  copy  the  OLDPL from the tape,
+ configure it to your site, and make  a  permanent  copy.   Then  individual
+ installation  procedures  can  be  accessed and used.  Request the tape and
+ then use the control statements:
+
+      COPYBF(TAPE,TEMP)
+      UPDATE(C=0,F,L=1,N=JOLDPL,P=TEMP,*=+)
+
+ with the  UPDATE  directives  described  below,  and  then  make  JOLDPL  a
+ permanent file.  You will need it to create each of the installation jobs.
+
+ The  UPDATE  directives  select  the  class  of your operating system, your
+
+
+                                      3
+1
+
+ Pascal-6000 Installation Handbook                                 27 May 86
+
+
+ character set,  your  operating-system  name,  and  your  site  name.   The
+ directives   also   specify   accounting   information,   system-opl-access
+ information, and tape-mounting information for your site.   The  directives
+ have the following form:
+
+      +IDENT CONFIG
+      +DECLARE HISTORY
+      +I HISTORY.10
+      *
+      * CONFIG  yyyy-mm-dd.        Your Name (Site).
+      * INSTALLATION.
+      * DECKS MODIFIED:  RMODS1, ACCOUNT, SYSOPL, TAPE.
+      +DEFINE os
+      +DEFINE cset
+      +DEFINE SUBMIT   (Optional, for KRONOS, NOS only.  See below)          |
+      +DEFINE SYSCOMP  (Optional, for NOS only.  See below)
+      +DECLARE RMODS1
+      +I RMODS1.52
+         OSNAME = '10charname';
+         SITENAME = '*** 40-character site name here ***     ';
+      +DECLARE ACCOUNT
+      +D ACCOUNT.2
+        accounting information (e.g., USER statement under NOS)
+      +DECLARE SYSOPL
+      +D SYSOPL.2
+        attach system opl (local name OPL under NOS and KRONOS,
+                           local name OLDPL under SCOPE 3.4,
+                           not necessary under NOS/BE and SCOPE 2)
+      +DECLARE TAPE
+      +D TAPE.2
+        mounting instructions for the release tape (e.g., LABEL
+                           statement under NOS)
+      +/        END OF MODSET "CONFIG".
+
+ You  must  select  your  installation's operating-system class by replacing
+ "os" with one of the following:
+
+      NOS1, NOS2, KRONOS, NOSBE, SCOPE2, or SCOPE34
+
+ You must select your installation's character set by replacing "cset"  with
+ one of the following:
+
+      A63 - ASCII subset 63-character set.
+      A64 - ASCII subset 64-character set.
+      A61 - ASCII subset 61-character set (KRONOS TTYD).
+      S63 - Scientific 63-character set.
+      S64 - Scientific 64-character set.
+
+ The  directive  +DEFINE  SUBMIT may be used under KRONOS, NOS 1, and NOS 2. |
+ If used, the resulting COMPILE file will be in a format suitable for  input |
+ to  SUBMIT.   The  first  line of the COMPILE file will be /JOB, and UPDATE |
+ end-of-record marks will be replaced by /EOR lines.  NOS 2 sites using this |
+ directive can replace their accounting information with /USER.              |
+
+ The  directive +DEFINE SYSCOMP is optional; it may be used only under NOS 1
+ and NOS 2.  Defining  SYSCOMP  will  cause  numerous  INCLUDE  packages  of
+
+
+                                      4
+1
+
+ Pascal-6000 Installation Handbook                                 27 May 86
+
+
+ constant  definitions  to  be  generated from the system's OPL symbol decks
+ (COMSxxx).  These packages will be  placed  on  PASCLIB.   This  option  is
+ intended for sites that do system-level programming in Pascal.
+
+ The  operating-system  name  (OSNAME) must be exactly 10 characters and the
+ site name (SITENAME) must be exactly 40 characters.  You  must  space  fill
+ them  if  they  are  shorter.   Both  will  appear  in  the page heading of
+ compilation listings.
+
+ The following example of UPDATE directives configures  the  procedures  for
+ NOS  1.4  running  the  63-character  ASCII  subset  at  the  University of
+ Minnesota.
+
+      +IDENT CONFIG
+      +DECLARE HISTORY
+      +I HISTORY.10
+      *
+      * CONFIG  1984-06-07.        D. J. BIANCHI (MINN).
+      * INSTALLATION.
+      * DECKS MODIFIED:  RMODS1, ACCOUNT, SYSOPL, TAPE.
+      +DEFINE NOS1
+      +DEFINE A63
+      +DEFINE SUBMIT                                                         |
+      +DECLARE RMODS1
+      +I RMODS1.52
+         OSNAME = 'NOS 1.4   ';
+         SITENAME = 'UNIVERSITY OF MINNESOTA COMPUTER CENTER.';
+      +DECLARE ACCOUNT
+      +D ACCOUNT.2
+      $USER(0,0,0)
+      +DECLARE SYSOPL
+      +D SYSOPL.2
+      $ATTACH(OPL=CPL/UN=LIBRARY,PN=SPL)
+      +DECLARE TAPE
+      +D TAPE.2
+      $LABEL(TAPE,VSN=TTPAS4,PO=R)
+      +/        END OF MODSET "CONFIG".
+
+ Each installation job can be generated by running UPDATE over  JOLDPL  with
+ the following control statement and directive:
+
+      UPDATE(P=JOLDPL,C=JOBFILE,L=1,Q,D,8,*=+)
+
+      +COMPILE jobname
+
+ where "jobname" is one of the following:
+
+      PASINST - Read the tape and configure Pascal to the target system.     |
+      PASCOMP - Compile the compiler and library.
+      PASLIST - List the compiler and library.
+      UTICOMP - Compile and link the Pascal utilities.
+      UTILIST - List the Pascal utilities.
+      ASCCOMP - Compile the full-ASCII compiler and library.
+      ASCLIST - List the full-ASCII compiler and library.
+
+ Each  of  these  jobs  is described more fully in subsequent sections.  The
+
+
+                                      5
+1
+
+ Pascal-6000 Installation Handbook                                 27 May 86
+
+
+ first three are described in sections  5.2,  5.3,  and  5.4.   UTICOMP  and
+ UTILIST  are  described in section 8.  ASCCOMP and ASCLIST are described in
+ Appendix A (Full-ASCII version).
+
+
+       __________________________________
++5.2.  THE PASINST INSTALLATION PROCEDURE                                    |
+
+ PASINST installs the locally-configured  compiler  and  library.   The  job |
+ reads  from  the  installation tape the files necessary for installation of |
+ the compiler and library, and generates the compiler and library.   Several |
+ permanent files are created and configured to your site:                    |
+
+   COLDPL  - Stock Pascal old program library.
+   LOLDPL  - Extended Library old program library.
+   OLDPASC - Stock Pascal compiler.
+   OLDPLIB - Stock Pascal library.
+   PASCAL  - The executable compiler.                                        |
+   PASCLIB - The Pascal-6000 library.                                        |
+   PSRCLIB - Additional library for NOS/BE and SCOPE 3.4 only (see below).   |
+   INCLGEN - The executable Inclgen program.                                 |
+   PASHIST - The compiler and minimal library modification history.          |
+   LIBHIST - The extended library modification history.                      |
+   PASTEXT - The Pascal systems text for use with COMPASS.                   |
+   UOLDPL  - The Utility programs old program library.
+
+ When you run the PASINST job, there should be no assembly or load errors.   |
+
+ The  OLDPLs  that result (COLDPL, LOLDPL, and UOLDPL) will be configured to |
+ your operating system, site, and character set.  OLDPASC  and  OLDPLIB  are |
+ created for those sites who wish to use PASCOMP to do further development.  |
+
+ The  library  PASCLIB  always  contains  relocatable  records.   Under NOS, |
+ KRONOS, and SCOPE 2, PASCLIB also  contains  text  records  that  have  the |
+ compiler  error  messages  and  the extended library include packages.  The |
+ additional text library (PSRCLIB)  is  created  only  under  SCOPE 3.4  and |
+ NOS/BE; it contains the text records that reside on PASCLIB under the other |
+ operating systems.                                                          |
+
+ Additional modsets can be installed during  the  PASINST  procedure.   They |
+ must be inserted when PASINST is accessed from JOLDPL.  Modsets applying to |
+ COLDPL are inserted after RMODS1.4  and  modsets  applying  to  LOLDPL  are
+ inserted after RMODSL.4.
+
+
+       __________________________________
++5.3.  THE PASCOMP INSTALLATION PROCEDURE
+
+ PASCOMP  generates a new version of the compiler and library, using modsets |
+ found in the common decks MODS1, MODS2, and MODSL.  The  PASCOMP  procedure |
+ performs  two  compilations  to  ensure  that  the  compiler  can take full |
+ advantage of any changes in code production.  PASCOMP starts with the files |
+ COLDPL,  LOLDPL, OLDPASC, and OLDPLIB as created by PASINST, and builds the |
+ following permanent files:
+
+
+
+
+
+
+                                      6
+1
+
+ Pascal-6000 Installation Handbook                                 27 May 86
+
+
+   PASCAL  - The new executable compiler.
+   PASCLIB - The new Pascal-6000 library (see below).
+   PSRCLIB - Additional library for NOS/BE and SCOPE 3.4 only (see below).
+   CNEWPL  - The new compiler and minimal library old program library.
+   LNEWPL  - The new extended library old program library.
+   INCLGEN - The executable Inclgen program.
+   PASHIST - The compiler and minimal library modification history.
+   LIBHIST - The extended library modification history.
+   PASTEXT - The Pascal systems text for use with COMPASS.
+
+ OLDPASC and OLDPLIB are referred to in the comments of  the  procedures  as
+ PASCAL[0] and PASCLIB[0], respectively.  The resulting compiler and library
+ are referred to as PASCAL[2] and PASCLIB[2] - the finished versions.
+
+ If you have heavy usage of Pascal at your site, you may want to incorporate
+ the  compiler  and  library  into  your  operating  system using SYSEDIT or
+ EDITLIB.  We leave the final decision and the final installation up to you.
+ See section 9 for hints.
+
+ PASCOMP  is  the  job  you should use to make changes to the Pascal system, |
+ beyond installation changes.  There are two sets of mods  to  COLDPL  since |
+ certain  kinds  of  changes to code production require that the compiler be
+ compiled twice, with modifications made at both steps.
+
+ To incorporate modsets in PASCOMP, they must be inserted into PASCOMP  when
+ it  is  accessed  from JOLDPL (see 5.1).  The first compilation modsets are
+ inserted after line MODS1.4 and any second compilation modsets are inserted
+ after  line  MODS2.4.   Modifications  to the extended library (LOLDPL) are
+ inserted after line MODSL.4.
+
+
+       _____________________
++5.4.  THE PASLIST PROCEDURE
+
+ PASLIST makes a full listing of the Pascal-6000 compiler  and  all  of  its
+ library routines.  The entire listing is approximately 1100 pages long.
+
+ Modsets  may  be  incorporated  into  PASLIST,  just  as  with  PASCOMP, by
+ inserting the first-  and  second-compilation  modsets  after  MODS1.4  and
+ MODS2.4, and the library modsets after MODSL.4.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                      7
+1
+
+ Pascal-6000 Installation Handbook                                 27 May 86
+
+
+     ___________________
++6.  PASCAL-6000 MODSETS
+
+
+       _____________
++6.1.  MODSET FORMAT
+
+ Persons  supplying  modsets  to Pascal-6000 to correct errors or to install
+ new features are encouraged to adhere  to  the  following  conventions  for
+ modset  format.   These  conventions  do  not  apply to the utilities oldpl
+ (UOLDPL).
+
+  - Ident names for modsets should be restricted to  seven  (7)  characters.
+    The  last  character of the ident names for two-part modsets should be a
+    '1' and '2' respectively.  Modset names  containing  at  least  one  (1)
+    asterisk are reserved for local modifications.
+
+  - All  changes  to  a  deck  should be grouped together in the modset, and
+    should be preceded by an Update DECLARE directive.
+
+  - Each modification set (Update ident) should include a description of the
+    changes  that  are  made  in  the  OLDPL.  This is called a main history
+    entry, and is designed as an aid to  future  Pascal  maintainers.   Each
+    OLDPL  has a deck called HISTORY, and the history entry should always be
+    inserted after HISTORY.10.
+
+    The format of a main history entry is:
+
+      Column 1
+      v         Column 11
+      v         v                  Column 30
+      v         v                  v
+      v         v                  v
+      *DECLARE HISTORY
+      *I HISTORY.10
+      *
+      * idname  yyyy-mm-dd.        programmer's name (site)
+      * In-depth description of this modification, extending to as many
+      * lines as are necessary.
+      * DECKS MODIFIED:  list of decks changed.
+
+    The main history entry should come right after the IDENT directive.
+
+  - Every modification set should insert a brief "deck-history"  entry  into
+    each deck that it modifies.  We have provided "history anchors" for each
+    deck in the program library to make it easy  to  know  where  to  insert
+    these  history  entries.  The name of the history anchor is generated by
+    adding the letter H  to  the  beginning  of  the  deck  name,  and  then
+    truncating  to  seven  characters if necessary.  The deck-history anchor
+    card number is three.  Thus, for instance, an entry for  COMP  would  be
+    inserted at HCOMP.3.
+
+  - Each modset should end with an Update comment of the form:
+
+      */        END OF MODSET "identname".
+
+
+
+
+
+                                      8
+1
+
+ Pascal-6000 Installation Handbook                                 27 May 86
+
+
+ The following example modset illustrates several of these guidelines.
+
+      *IDENT    NOLIMIT
+      */
+      *DECLARE HISTORY
+      *I HISTORY.10
+      *
+      * NOLIMIT 1985-06-18.        DAVE BIANCHI (MINN).                      |
+      * CHANGE THE DEFAULT LINE LIMIT (PL PARAMETER AND OPTION) TO INFINITY. |
+      * DECKS MODIFIED: COMP.                                                |
+      */                                                                     |
+      *DECLARE COMP                                                          |
+      *I HCOMP.3                                                             |
+      * CHANGE DEFAULT LINE LIMIT TO INFINITY.                               |
+      *D V41DC05.272  (COMP.755)                                             |
+           '       ','       ','0      ','       ','COMPILE',                |
+      */        END OF MODSET "NOLIMIT".
+
+
+       _____________
++6.2.  LOCAL MODSETS
+
+ Modifications that are not supplied by the University of Minnesota as  part
+ of  an  official  Pascal-6000  release  or update are called local modsets.
+ Persons installing these modsets should adhere to the following conventions
+ for best results.
+
+  - Modset  names  with  one  or  more  asterisks (*) are reserved for local
+    modsets.
+
+  - The local "level" number should be used to represent local  versions  of
+    the Pascal system.  It is printed in the heading of the compiler listing
+    for identification purposes.  The local level number is defined  by  the
+    symbol LEVNUM in the common deck COMSPAS in COLDPL.
+
+  - The  local  library-level  number  should  be changed when local modsets
+    cause the  library  to  become  incompatible  with  previously  existing
+    relocatable  programs.   For  instance,  if  the  calling sequence for a
+    library routine is changed by a  modset,  then  that  modset  should  be
+    installed  with  a new library-level number.  This will prevent existing
+    relocatable (compiled) programs from being mistakenly  linked  with  the
+    new  (incompatible) library.  The library-level number is defined by the
+    symbol LLIBNUM in the common deck COMSPAS in COLDPL.
+
+
+       ________________________________
++6.3.  MISCELLANEOUS ADDITIONAL MODSETS
+
+ This section describes additional modsets distributed with Pascal-6000 that
+ may  be  useful  at  some  sites,  but  are not considered to be "official"
+ Pascal-6000 modsets.  See section 4 (Tape Contents) for the location on the
+ tape  of the file containing "Miscellaneous Additional Modsets".  This file
+ consists of several system logical records, one for each modset.
+
+
+ _____________________
++IAF-Subsystem Modsets
+
+ NOS sites may wish to install Pascal as an IAF  subsystem.   We  have  done
+
+
+                                      9
+1
+
+ Pascal-6000 Installation Handbook                                 27 May 86
+
+
+ this at the University of Minnesota and provide several modsets to serve as
+ guides.  The first three modsets apply to NOS 1.4-552.  The  fourth  modset
+ applies to NOS 2.2.
+
+
+
+     _________________________________
++7.  MACHINE-RETRIEVABLE DOCUMENTATION
+
+ The release tape contains nine machine-retrievable documents.               |
+
+ 1. "PASCAL"  is  about  94  pages  and  describes  the  differences between |
+    Pascal-6000 and Standard  Pascal  and  includes  helpful,  user-oriented
+    information  such  as  a description of the Pascal control statement and
+    compiler options.  The first section of  this  writeup,  "Accessing  the
+    Pascal  Compiler", is oriented to our site (University of Minnesota) and |
+    you might need to change it to describe your site.                       |
+ 2. "Release 4 Upgrade Guide" describes the  differences  between  Release 3
+    and Release 4, and gives hints for adapting your programs for Release 4.
+    It is about 21 pages.                                                    |
+ 3. "Pascal Library Information" describes  the  extended  library  routines
+    available in the Pascal library PASCLIB.  This is approximately 90 pages |
+    long.                                                                    |
+ 4. The fourth writeup describes the PASPLOT plotting package.
+ 5. "Installation Handbook" is the document you are reading.
+ 6. "Internal Reference Manual" provides data structures and algorithms used
+    by  the  Pascal-6000  implementation.   It  is  about 44 pages.  n7. The |
+    seventh section of writeups is about 30 pages  long  and  documents  the
+    Pascal utility programs.
+ 8. "Prose  Instruction  Manual" is about 30 pages long and documents Prose,
+    the text-formatter used to generate all of the writeups on  the  release
+    tape.
+ 9. "Summary  of Changes" descibes the changes that have been made since the |
+    last version of Pascal-6000.                                             |
+
+ The documents are provided on the  release  tape  in  two  forms:  "printer |
+ ready"  and  "source".   The tool PROSE (see section 8) is used to generate |
+ the  "printer-ready"  form  from   the   "source"   form.    PROSE   is   a |
+ highly-portable  Pascal  program  and  a  descendent  of RUNOFF.  PROSE was |
+ developed at the University of Minnesota during 1977 and  1978.   PROSE  is |
+ also on the release tape as one of the Pascal tools.
+
+ The  documentation  is  in  full-ASCII  upper/lower  case  form,  using the
+ KRONOS/NOS convention of 74B and 76B escape codes.   If  full-ASCII  output
+ devices are available on your system, we recommend you use them for listing
+ the writeups.  If full-ASCII output devices are not available, or  if  your
+ site  uses  the  SCOPE  or  NOS/BE  8/12-bit ASCII convention, we provide a
+ program to convert the writeups to an  alternate  form  (upper  case  only,
+ 8/12-bit ASCII, intercom 95 character subset ASCII, 63 or 64 character set,
+ etc).  This program is called WRITE and  is  also  included  on  the  tools
+ OLDPL.
+
+
+
+
+
+
+
+
+                                      10
+1
+
+ Pascal-6000 Installation Handbook                                 27 May 86
+
+
+     _________________________
++8.  THE PASCAL-6000 UTILITIES
+
+ The   release   tape  contains  3  files  associated  with  various  Pascal
+ software-writing utility programs to aid  the  Pascal  programmer  in  many
+ phases of program development.  The files are the utilities program library
+ UOLDPL, the printer-ready utilities writeup "PTOOLS", and  the  source  for
+ "PTOOLS".   The  OLDPL contains the source of the utilities.  All utilities
+ are completely written in Pascal except  for  WRITE  which  has  a  COMPASS
+ extern (see the comments in the source for WRITE).
+
+ Here is a list of the tools provided in UOLDPL:
+
+      ANALYZE - Summarize performance measurements (see AUGMENT).
+      AUGMENT - Prepare Pascal program for performance measurement.
+      COMPARE - Compare two textfiles and report their differences.
+      PASCODE - Pascal to pseudo-COMPASS decoder.
+      PASCREF - Pascal program cross referencer.
+      PASPPIX - Program to generate pictures for PASPLOT writeup.
+      PASVERT - Pascal program character set converter.
+      PRETTY  - Pascal program formatter.
+      PROSE   - Text formatting program.
+      SPRUCE  - Pascal program formatter.
+      WRITE   - Character set translator.
+
+ Documentation  for  all  tools  except  PROSE  and PASPPIX is on the PTOOLS
+ writeup; documentation for PROSE is on a separate file of the release tape.
+ Documentation  for  PASPPIX  exists  as  comments  at  the beginning of the
+ program source code.
+
+ We have made an attempt to  preserve  the  portability  of  several  tools.
+ Modsets  with  names  CDC,  CDC1,  etc.,  are  applied  to  add Pascal-6000
+ dependent code.  They can be yanked  to  improve  the  portability  of  the
+ source code.
+
+ The  job  UTICOMP on JOLDPL (see section 5.1) will compile and link each of
+ the utility programs, placing them on separate permanent  files.   The  job
+ UTILIST on JOLDPL produces a listing of all the utilities.
+
+ Modifications  to  the utilities can be inserted into UTICOMP or UTILIST by
+ inserting them into JOLDPL after UMODS.4.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                      11
+1
+
+ Pascal-6000 Installation Handbook                                 27 May 86
+
+
+     __________________
++9.  HINTS AND CAUTIONS
+
+ 1. To install Pascal-6000 Release  4,  you  will  need  an  account  number
+    validated  for  at  least 140K of central memory, access to at least one
+    (1) magnetic tape unit and  permanent  file  capability  (direct  access
+    files under KRONOS and NOS).
+
+ 2. The  Release  3  oldpl  (POLDPL) has been split into two new oldpl's for
+    Release 4:  COLDPL (compiler and minimal library) and  LOLDPL  (extended
+    library).  These oldpl's have been resequenced in Release 4.  Modsets to
+    Release 3 will have to be converted before they can be  applied  against
+    the Release 4 system.                                                    |
+
+ 3. We  assume  KRONOS  installations  use Cyber loader.  If this is not the
+    case, then some adjustments to the installation jobs are in  order.   If
+    you are using the Link loader, then substitute:
+
+             $LOAD(LGO)
+             $NOGO(FILE)
+
+    with:
+
+             $LINK(F=LGO,B=FILE)
+
+    Also,  note  the  conditional assembly in COMPRTN for KRONOS sites using
+    Link loader.  The code is necessary for Link loader but  has  no  effect
+    under Cyber loader.
+
+ 4. If  you  have  a number of users interfacing COMPASS to Pascal programs,
+    you may want to make the Pascal-6000 common deck  COMSPAS  available  on
+    your   system  OPL  or  OLDPL.   Another  possibility  is  to  make  the
+    Pascal-6000 systems text PASTEXT accessible to users.
+
+ 5. The file containing the  compiler  may  be  renamed  without  any  other
+    changes  being  necessary.  The library file names, however, are used by
+    the compiler.  Their names are defined as  micros  in  the  COLDPL  deck
+    PASTEXT.   The  symbol TLFN defines the text library name (PSRCLIB under
+    NOS/BE and SCOPE 3.4, PASCLIB otherwise).  The symbol RLFN  defines  the
+    relocatable  library name (PASCLIB under all systems).  In addition, the
+    NOS/BE,  SCOPE 2  and  SCOPE 3.4  libraries  are  assumed  to  have  the
+    permanent file ID specified by the micro PLID (ID=PASCAL4 normally).
+
+ 6. The  default  settings  for  the  PD  and  PS compiler parameters (print
+    density and page size) are first obtained from the system  text  IPTEXT,
+    and  then from the macro GETPAGE if available.  However, the alternative
+    defaults for PS (default if PD is specified) are defined as constants in |
+    the  compiler  (symbols  DEFPS6 = 63  and DEFPS8 = 84).  You may wish to |
+    "customize" these defaults to your site.
+
+
+
+
+
+
+
+
+
+
+                                      12
+1
+
+ Pascal-6000 Installation Handbook                                 27 May 86
+
+
+              _____________________________________
++APPENDIX A.  THE FULL-ASCII VERSION OF PASCAL-6000
+
+ NOTE:  The ASCII installation jobs (ASCCOMP and ASCLIST) have been  adapted
+ only  for  NOS 1  and NOS 2 so far.  However, it should not be difficult to
+ convert the NOS jobs to NOS/BE or SCOPE 3.4  to  process  6/12  ASCII.   We
+ would  appreciate  help  from NOS/BE and SCOPE 3.4 sites interested in this
+ task.  We have no plans to support ASCII  Pascal-6000  under  SCOPE 2.   If
+ this would be useful, please let us know.
+
+
+       _________________________
++A.1.  FEATURES AND RESTRICTIONS
+
+ The  following  features  distinguish  the full-ASCII version (called ASCII
+ Pascal-6000) from regular (display code) Pascal-6000.
+
+  - The type CHAR has 128 values, the ordinal numbers of which are the ASCII
+    character codes.  Characters occupy 7 bits, and are packed 8 per word in
+    character strings.  Type ALFA is redefined to be
+
+         PACKED ARRAY [1..8] OF CHAR
+
+  - Character encodings are translated during  textfile  input  and  output.
+    During  input, the "extended" 6-bit/12-bit encoding is translated to the
+    7-bit encoding; during output, the opposite  translation  is  performed.
+    Translation  is  also  done  by the run-time-system and library routines
+    that interact with the operating system.
+
+  - Braces may be used to delimit comments.  { is equivalent to (* and }  is
+    equivalent  to  *).   This  means  that  {  *)  and  (* } are both valid
+    comments.
+
+  - Lowercase and uppercase  letters  occurring  in  a  source  program  are
+    equivalent unless they occur in a character or string constant.
+
+ There are also several restrictions in ASCII Pascal-6000.
+
+  - The  8-in-12  encoding for textfiles is not yet supported.  The textfile
+    encodings that are supported are the 63- and 64-character  set  extended
+    (6/12)  code  sets  defined  by  IAF  under NOS and the 61-character set
+    extended code set defined by TELEX under KRONOS.
+
+  - The character encoding is an installation option and  must  be  selected
+    when  ASCII  Pascal  is generated.  This selection cannot be changed for
+    each program at compile time nor at run time.
+
+  - Sets can have at most 59 elements.  Sets of characters can have elements
+    in  the  range  ' ' (chr(32)) to 'Z' (chr(99)).  This range includes the
+    digits and the uppercase letters.
+
+  - All of the extended library packages are available except PFM and  ROUTE |
+    (two NOS-only packages).                                                 |
+
+  - The  compiler  has  not  yet been completely converted to use full-ASCII
+    internally, and thus it cannot self-compile.  This means that additional
+    mods can be applied to the ASCII Pascal-6000 system only by regenerating
+    it using regular Pascal-6000 as a base.
+
+
+
+                                     A-1
+1
+
+ Pascal-6000 Installation Handbook                                 27 May 86
+
+
+       ____________
++A.2.  INSTALLATION
+
+ Installation under version 4.1 has been simplified  by  adding  conditional |
+ code  to  the  runtime system and adding character conversion routine decks |
+ (normally yanked).  As a result, the ASCCOMP  and  ASCLIST  jobs  are  much |
+ shorter.  The installation jobs PL (JOLDPL) includes the following decks.   |
+
+   ASCCOMP is  a job that generates a full-ASCII version of Pascal-6000 from
+           the regular version.
+   ASCLIST is a job that creates a listing file for the compiler and minimal
+           library.
+   ASCII1  is  a  common  deck  containing  the modsets for the compiler and
+           minimal library.
+                                                                             *
+   ASCIIL  is a common deck containing the modsets for the extended library.
+
+ ASCCOMP and ASCLIST both call ASCII1, ASCIIL, MODS1, MODS2, and MODSL.      |
+
+ **  Neither  ASCCOMP nor ASCLIST has been adapted yet for KRONOS, NOS/BE or
+ SCOPE 3.4.
+
+
+ ASCCOMP and ASCLIST use the following permanent files.
+
+   PASCAL  is the regular Pascal-6000 executable compiler.
+   PASCLIB is the regular Pascal-6000 relocatable library.
+   COLDPL  is the regular Pascal-6000 compiler and minimal-library PL.
+
+
+ ASCCOMP generates the following permanent files.
+
+   APASCAL is the ASCII Pascal executable compiler.
+   APASLIB is the ASCII Pascal relocatable and text library.
+   ACNEWPL is the ASCII Pascal compiler and minimal library pl.
+   ALNEWPL is the ASCII Pascal extended library pl.
+   APASHST is modification history for the ASCII Pascal compiler and minimal
+           library.
+   ALIBHST is the modification history for the extended library.
+   APASTXT is the ASCII Pascal systems text.
+
+
+
+ ASCCOMP  and  ASCLIST are accessed from JOLDPL as described in section 5.1.
+ For example, ASCCOMP is accessed using the following control statement  and
+ directive:
+
+    UPDATE(P=JOLDPL,L=1,Q,C=ASCCOMP,D,8,*=+)
+
+    +COMPILE ASCCOMP
+
+ Additional  modsets  can  be applied during ASCCOMP or ASCLIST.  First- and
+ second-compilation  modsets  are  inserted  in  JOLDPL  after  MODS1.4  and
+ MODS2.4; extended library modsets are inserted after MODSL.4.
+
+
+
+
+
+
+                                     A-2
+1
+
+ Pascal-6000 Installation Handbook                                 27 May 86
+
+
+       __________________
++A.3.  HISTORY AND STATUS
+
+ The  full-ASCII  mods  were developed by Scott Trappe of Tektronix, Inc. to
+ work with Pascal-6000 Release 3 under KRONOS.  The mods were  upgraded  for
+ Release  4  under NOS at the University of Minnesota by Steve Siirila, Dave
+ Bianchi, and Jim Miner.
+
+
+       ___________________
++A.4.  CHARACTER SET TABLE
+
+ The character codes listed in this table are expressed in octal.
+
+
+             CDC                CDC                CDC                CDC
+      ASCII 6/12         ASCII 6/12         ASCII 6/12         ASCII 6/12
+ Char  Code Code    Char  Code Code    Char  Code Code    Char  Code Code
+
+  NUL  000  7640          040    55      @   100  7401    ***   140  7600
+  SOH  001  7641      !   041    66      A   101    01      a   141  7601
+  STX  002  7642      "   042    64      B   102    02      b   142  7602
+  ETX  003  7643      #   043    60      C   103    03      c   143  7603
+  EOT  004  7644      $   044    53      D   104    04      d   144  7604
+  ENQ  005  7645      %   045     *      E   105    05      e   145  7605    |
+  ACK  006  7646      &   046    67      F   106    06      f   146  7606
+  BEL  007  7647      '   047    70      G   107    07      g   147  7607
+   BS  010  7650      (   050    51      H   110    10      h   150  7610
+   HT  011  7651      )   051    52      I   111    11      i   151  7611
+   LF  012  7652      *   052    47      J   112    12      j   152  7612
+   VT  013  7653      +   053    45      K   113    13      k   153  7613
+   FF  014  7654      ,   054    56      L   114    14      l   154  7614
+   CR  015  7655      -   055    46      M   115    15      m   155  7615
+   SO  016  7656      .   056    57      N   116    16      n   156  7616
+   SI  017  7657      /   057    50      O   117    17      o   157  7617
+  DLE  020  7660      0   060    33      P   120    20      p   160  7620
+  DC1  021  7661      1   061    34      Q   121    21      q   161  7621
+  DC2  022  7662      2   062    35      R   122    22      r   162  7622
+  DC3  023  7663      3   063    36      S   123    23      s   163  7623
+  DC4  024  7664      4   064    37      T   124    24      t   164  7624
+  NAK  025  7665      5   065    40      U   125    25      u   165  7625
+  SYN  026  7666      6   066    41      V   126    26      v   166  7626
+  ETB  027  7667      7   067    42      W   127    27      w   167  7627
+  CAN  030  7670      8   070    43      X   130    30      x   170  7630
+   EM  031  7671      9   071    44      Y   131    31      y   171  7631
+  SUB  032  7672      :   072    **      Z   132    32      z   172  7632
+  ESC  033  7673      ;   073    77      [   133    61      {   173  7633
+   FS  034  7674      <   074    72      \   134    75      |   174  7634
+   GS  035  7675      =   075    54      ]   135    62      }   175  7635
+   RS  036  7676      >   076    73      ^   136  7402   ****   176  7636
+   US  037  7677      ?   077    71      _   137    65     DEL  177  7637
+
+
+     * CDC Code for % is 7404 (63-character set) or 63 (64-character set).   |
+    ** CDC Code for : is 63 (63-character set) or 7404 (64-character set).   |
+   *** Grave accent character.
+  **** Tilde character.
+
+
+
+
+                                     A-3
+1
+1
+
+ Pascal-6000 Installation Handbook                                 27 May 86
+
+
+              ___________________________________
++APPENDIX B.  DECK NAMES ON OLD PROGRAM LIBRARIES
+
+
+       ____________
++B.1.  JOLDPL DECKS
+
+ ____________
++Common Decks
+
+ ACCOUNT - Control statements for job accounting.
+ ASCII1  - ASCII Pascal compiler and minimal library modsets.
+                                                                             *
+ ASCIIL  - ASCII Pascal extended library modsets.
+ CVSTEXT - Program to convert system texts to INCLUDE packages.
+ EXTRACT - Program to extract CTEXT decks.
+ HELPTXT - Systems text used in assembly of CTEXT decks.
+ MODS1   - Pascal first compilation modsets.
+ MODS2   - Pascal second compilation modset.
+ MODSL   - Pascal Library compilation modset.
+ RMODS1  - PASINST first compilation modset.                                 |
+ RMODSL  - PASINST Library compilation modset.                               |
+ RMODSU  - PASINST Utility modset.                                           |
+ SYSCOMP - Control statements used to generate INCLUDE packages
+           from system texts.
+ SYSLIST - Control statements used to generate listing of SYSCOMP.
+ SYSOPL  - Control statements to access system OPL (or OLDPL).
+ TAPE    - Control statements to mount release tape.
+ UMODS   - Utility program modsets.
+ WEOR    - Write compile file end-of-record.                                 |
+
+
+ __________
++Main Decks
+
+ HISTORY - JOLDPL modification history.
+ PASINST - Install the Pascal compiler and library.                          |
+ PASCOMP - Generate new Pascal compiler and library.
+ PASLIST - Generate listing of Pascal compiler and library.
+ ASCCOMP - Generate ASCII Pascal compiler and library.
+ ASCLIST - Generate listing of ASCII Pascal compiler and library.
+ UTICOMP - Generate utility programs.
+ UTILIST - Generate listings of utility programs.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                     B-1
+1
+
+ Pascal-6000 Installation Handbook                                 27 May 86
+
+
+       ____________
++B.2.  COLDPL DECKS
+
+ ____________
++Common Decks
+
+ COMSPAS - Run-time equivalences.
+ CPCOM   - CP Communication Macros (for SCOPE 3.4).
+
+
+ __________
++Main Decks
+
+ HISTORY - COLDPL modification history.
+ EOR0    - End-of-record.
+ INCLGEN - INCLUDE/ERROR deck preprocessor (Pascal).
+ EOR01   - End-of-record.                                                    |
+ C6TO612 - Convert 6-bit chars to 6/12-bit chars (Pascal).                   |
+ EOR02   - End-of-record.                                                    |
+ C612TO6 - Convert 6/12-bit chars to 6-bit chars (Pascal).                   |
+ EOR1    - End-of-record.
+ PASTEXT - Pascal-6000 systems text (COMPASS).
+ EOR2    - End-of-record.
+ COMPOVL - Compiler OVERLAY record (COMPASS).
+ COMPASC - Compiler ASCII conversion routines (COMPASS).                     |
+ COMPRTN - Compiler routines (COMPASS).
+ EOR3    - End-of-record.
+ COMP    - Pascal-6000 compiler (Pascal).
+ EOR4    - End-of-record.
+ PASCMSG - Compile time error message texts.
+ EOR5    - End-of-record.
+ PSYSTM  - Pascal-6000 run time system (COMPASS).
+ PMM     - Pascal-6000 memory manager (COMPASS).
+ CMM     - Pascal-6000 CMM interface (COMPASS).                              |
+ REC     - Pascal-6000 REPRIEVE interface (COMPASS).
+ EOR6    - End-of-record.
+ PASCLIB - Pascal library routines (Pascal).
+ EOR7    - End-of-record.
+ ZFN     - Routine to zero fill name (COMPASS).
+ AHM     - Alternative heap-management routines (COMPASS).
+ ASCII   - ASCII conversion routines (COMPASS).                              |
+ ATAN    - Arctan function (COMPASS).
+ BPV     - Bad pointer value function (COMPASS).
+ CLOSE   - Close Pascal-6000 file (COMPASS).                                 |
+ DBL     - Double-precision math routines (COMPASS).
+ EOI     - End-of-information function (COMPASS).                            |
+ EXP     - Exponential function (COMPASS).
+ FILENAM - Return Pascal file name (COMPASS).                                |
+ GETF    - GETFILE routine (COMPASS).                                        |
+ GETPAGE - GETPAGE and SETPAGE routines (COMPASS).                           |
+ LN      - Natural logarithm function (COMPASS).
+ MVE     - Routine to move block of data (COMPASS).
+ OPEN    - Open Pascal file (COMPASS).                                       |
+ PUTF    - PUTFILE routine (COMPASS).                                        |
+ SINCO   - Sin/cosine functions (COMPASS).
+ SQRT    - Square root function (COMPASS).
+ WRS     - Write string routine (COMPASS).
+ EOR8    - End-of-record.
+
+
+
+
+                                     B-2
+1
+
+ Pascal-6000 Installation Handbook                                 27 May 86
+
+
+       ____________
++B.3.  LOLDPL DECKS
+
+ HISTORY - LOLDPL modification history.
+ EOR0    - End-of-record.
+ INCLUDE - Pascal library INCLUDE packages.
+ NOSINCL - INCLUDE packages for NOS systems.
+ EOR1    - End-of-record.
+ EXTLIB  - Extended library routines (Pascal).
+ EOR2    - End-of-record.
+ PASPLOT - Pascal CALCOMP plotting routines (Pascal).
+ EOR3    - End-of-record.
+ ARCCOS  - Extended math routine ARCCOS (COMPASS).
+ ARCSIN  - Extended math function ARCSIN (COMPASS).
+ ARCTAN2 - Extended math function ARCTAN2 (COMPASS).
+ COSH    - Extended math function COSH (COMPASS).
+ CSIMAGE - Return control statement image (COMPASS).
+ DUMP    - Print snapshot dump (COMPASS).
+ LOG10   - Extended math function LOG10 (COMPASS).
+                                                                             *
+ PLOTCOM - PASPLOT communication routines (COMPASS).
+ POWER   - Extended math function POWER (COMPASS).
+ POWERI  - Extended math function POWERI (COMPASS).
+ RAN     - Pseudo-random number generator (COMPASS).
+ RANDOM  - Random number generator (COMPASS).
+ SINH    - Extended math function SINH (COMPASS).
+ TAN     - Extended math function TAN (COMPASS).
+ TANH    - Extended math function TANH (COMPASS).
+ EOR4    - End-of-record.
+
+ ______________
++NOS-Only Decks
+
+ NOSLIB  - NOS-only library routines PFM and ROUTE (Pascal).
+ EOR5    - End-of-record.
+ ABORT   - Abort Pascal program (COMPASS).                                   |
+ BKSP    - Backspace logical records on local file (COMPASS).                |
+ BKSPRU  - Backspace PRUs on local file (COMPASS).                           |
+ CLEARBD - Clear B-display message (COMPASS).                                |
+ COMPLET - Last file operation file complete (COMPASS).                      |
+ CSET    - Change timesharing character set (COMPASS).                       |
+ DEVICE  - Device type of local file (COMPASS).                              |
+ DISABLE - Disable terminal control (COMPASS).                               |
+ DSPCOM  - ROUTE communication routines (COMPASS).                           |
+ ENABLE  - Enable terminal control (COMPASS).                                |
+ ENCSF   - Enter control statement file (COMPASS).                           |
+ ENDRUN  - End execution of program (COMPASS).                               |
+ EVICT   - Evict local file (COMPASS).                                       |
+ EXCST   - Execute control statement (COMPASS).                              |
+ FAMILY  - Return current family name (COMPASS).                             |
+ FILEID  - Return local file ID (COMPASS).                                   |
+ FILESC  - Return local file status code (COMPASS).                          |
+ FNTGET  - Return FNT entry (COMPASS).                                       |
+ GETJCR  - Get job control register contents (COMPASS).                      |
+ GETPACK - Get current pack name (COMPASS).                                  |
+ GETTM   - Get terminal mode and model (COMPASS).                            |
+ JOBNAME - Return job name (COMPASS).                                        |
+ JOBORIG - Return job origin (COMPASS).                                      |
+ LFMFET  - FET for LFM routines (COMPASS).                                   |
+
+
+                                     B-3
+1
+
+ Pascal-6000 Installation Handbook                                 27 May 86
+
+
+ LFMINF  - LFM subroutine - Perform FILINFO (COMPASS).                       |
+ LFMODE  - Return local file mode (COMPASS).                                 |
+ LFMPNF  - LFM subroutine - Prepare Name for FET (COMPASS).                  |
+ LFMSTA  - Return local file status (COMPASS).                               |
+ LFMZFN  - LFM subroutine - Zero fill file name (COMPASS).                   |
+ LFPOS   - Return local file position (COMPASS).                             |
+ LFSIZE  - Return local file size (COMPASS).                                 |
+ LFTYPE  - Return local file type (COMPASS).                                 |
+ LOCAL   - Return true if file assigned to job (COMPASS).                    |
+ LOCK    - Lock local file (COMPASS).                                        |
+ MACHINE - Return machine id (COMPASS).                                      |
+ NODROP  - NODROP (FS=NAD) local file (COMPASS).                             |
+ OPENED  - Return true if local file opened (COMPASS).                       |
+ PACKNAM - Return current pack name (COMPASS).                               |
+ PARITY  - Set current terminal parity (COMPASS).                            |
+ PFMCOM  - NOS-only PFM communication routines (COMPASS).
+ PRIMARY - Change local file to primary type (COMPASS).                      |
+ PROGNAM - Return program name (PGNR) (COMPASS).                             |
+ PROMPT  - Enter/exit terminal prompt mode (COMPASS).                        |
+ PROTECT - Set user file privacy (COMPASS).                                  |
+ RENAME  - Rename local file (COMPASS).                                      |
+ RETURN  - Return local file (COMPASS).                                      |
+ REWIND  - Rewind local file (COMPASS).                                      |
+ ROLLOUT - Rollout job (COMPASS).                                            |
+ SBCOPY  - Single buffer copy routine (COMPASS).
+ SECOND  - Change primary file to secondary type (COMPASS).                  |
+ SETFS   - Set file status code (COMPASS).                                   |
+ SETID   - Set file ID (COMPASS).                                            |
+ SETJCR  - Set job control registers (COMPASS).                              |
+ SETPACK - Set current pack name (COMPASS).                                  |
+ SETTM   - Set terminal mode and model (COMPASS).                            |
+ SKIPEI  - Skip to EOI on local file (COMPASS).                              |
+ SKIPF   - Skip file marks on local file (COMPASS).                          |
+ SKIPR   - Skip record marks on local file (COMPASS).                        |
+ TSACOT  - TSAIDS subroutine - Check Origin Type (COMPASS).                  |
+ TSAHTI  - TSAIDS subroutine - Handle Terminal Interrupt (COMPASS).          |
+ TSTATUS - Return Terminal Status (COMPASS).                                 |
+ TTYFILE - Return true if local file assigned to terminal (COMPASS).         |
+ UNLOAD  - Unload local file (COMPASS).                                      |
+ UNLOCK  - Unlock local file (COMPASS).                                      |
+ USERIND - Return current user index (COMPASS).                              |
+ USERNUM - Return current user number (COMPASS).                             |
+ WRITECB - Write control byte on Pascal file (COMPASS).                      |
+ EOR6    - End-of-record.                                                    |
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                     B-4
+1
+
+ Pascal-6000 Installation Handbook                                 27 May 86
+
+
+       ____________
++B.4.  UOLDPL DECKS
+
+ ANALYZE - Analyze Pascal program execution.
+ EOR010  - End-of-record.
+ AUGMENT - Prepare Pascal program for execution analysis.
+ EOR020  - End-of-record.
+ COMPARE - Compare two textfiles for differences.
+ EOR030  - End-of-record.
+ PASCODE - Convert Pascal-6000 relocatable binaries into pseudo-COMPASS.
+ EOR040  - End-of-record.
+ PASCREF - Pascal-6000 cross reference program.
+ EOR050  - End-of-record.
+ PASPPIX - Produce PASPLOT writeup example plots.
+ EOR060  - End-of-record.
+ PASVERT - Pascal character set conversion program.
+ EOR070  - End-of-record.
+ PRETTY  - Pascal pretty-printer.
+ EOR080  - End-of-record.
+ PROSE   - Pascal text formatter.
+ EOR090  - End-of-record.
+ SPRUCE  - Pascal pretty-printer.
+ EOR100  - End-of-record.
+ WRITE   - Convert writeup character sets.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                     B-5
+                                     

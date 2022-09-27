@@ -1,0 +1,19 @@
+#!/bin/sh
+# start and stop the pdf printfile formatter process
+
+curdir=$PWD
+case "$1" in
+  start)
+        > LP5xx_C12_E5
+        ./lpt2pdf/nosbeformatter.py --prtfile LP5xx_C12_E5 --pdfdir printfiles &
+        echo $! > fpid
+	;;
+  stop)
+        kill -3 `cat fpid`
+	;;
+  *)
+	echo "Usage: $0 {start|stop}"
+	exit 1
+esac
+
+exit 0

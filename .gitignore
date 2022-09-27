@@ -1,0 +1,16 @@
+*.tap
+*.TAP
+*.pdf
+CP3446_C12_E6
+LP5xx_C12_E5
+DQ01
+DQ02
+fpid
+emlog.txt
+log.txt
+lpt2pdf/lpt2pdf
+DeadstartTapes/*
+cmStore
+ecsStore
+mt679StoreC13E00
+ppStore
