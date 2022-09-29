@@ -123,6 +123,9 @@ def main():
       sys.exit(1)
     
    exeFile=os.path.join(os.path.dirname(__file__),"lpt2pdf")
+   if not os.path.isfile(exeFile):
+      print("lpt2pdf executable not found")
+      sys.exit(1)
       
 #
 #  open printer file and activate SIGQUIT handler
@@ -165,7 +168,7 @@ def main():
 #
       if proc==None:
          filename=args.pdfdir+"/print-"+datetime.datetime.now().strftime("%Y_%m_%d_%H_%M_%S")+".pdf"
-         proc=subprocess.Popen(["lpt2pdf","-tof","3","--",filename],stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+         proc=subprocess.Popen([exeFile,"-tof","3","--",filename],stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
          start=True
 #
 #     output line with ANSI printer control
