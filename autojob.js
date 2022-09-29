@@ -12,7 +12,7 @@
  *
  * This script runs a series of batch processes which are specified in a
  * configuration file, which normally resides in the node_modules
- * subdirectory. See the file test.js for details.
+ * subdirectory. See the file run_tests.js for details.
  *
  * The script runs the jobs defined in the configuration file one after
  * another. It first unloads all tapes, and mounts the tapes required
