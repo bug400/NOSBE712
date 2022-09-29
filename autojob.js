@@ -350,8 +350,12 @@ function check(configArray) {
                error=true;
             }
          } else {
-            if ( fs.existsSync(tapeFile)) {
-              fs.unlinkSync(tapeFile);
+            try {
+                fs.writeFileSync(tapeFile,'Test');
+                fs.unlinkSync(tapeFile);
+            } catch(err) {
+                console.log(`job ${jobDescription}: cannot write to tape image ${tapeFile}`);
+                error=true;
             }
          }
       }
