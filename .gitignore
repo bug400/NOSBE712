@@ -9,7 +9,8 @@ fpid
 emlog.txt
 log.txt
 lpt2pdf/lpt2pdf
-DeadstartTapes/*
+DeadstartTapes/*.tap
+DeadstartTapes/*.TAP
 cmStore
 ecsStore
 mt679StoreC13E00
