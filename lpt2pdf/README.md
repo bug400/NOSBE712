@@ -1,4 +1,4 @@
-###### NOS/BE printer formatter
+###### NOS/BE print post processor
 
 This directory contains the software that separates the print jobs in the
 LP5xx_C12_E5 file into PDF files and stores them in the printfiles subdirectory.

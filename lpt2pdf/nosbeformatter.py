@@ -39,6 +39,8 @@ import signal
 import sys
 import argparse
 import os.path
+import platform
+import logging
 
 #
 # init variables
@@ -49,7 +51,7 @@ shutdown=False
 start=True
 
 #
-# SIGQUIT handler, sets the shutdown flag
+# SIGTERM handler, sets the shutdown flag
 #
 def finish(signal,frame):
    global shutdown
@@ -102,45 +104,86 @@ def outputAnsi(line):
    proc.stdin.write(b'\n');
 
 
+#
+# write pid to file
+#
+def writePidToFile(pidfilePath):
+    openFlags = (os.O_CREAT | os.O_WRONLY)
+    openMode = 0o644
+    pidfileFd = os.open(pidfilePath, openFlags, openMode)
+    pidfile = os.fdopen(pidfileFd, 'w')
+    pid = os.getpid()
+    pidfile.write("%s\n" % pid)
+    pidfile.close() 
+
+#
+# truncate file
+#
+def truncateFile(filePath):
+    openFlags = (os.O_CREAT | os.O_WRONLY)
+    openMode = 0o644
+    fileFd = os.open(filePath, openFlags, openMode)
+    file = os.fdopen(fileFd, 'w')
+    file.seek(0)
+    file.truncate()
+    file.close() 
+
 def main():
    global f,proc,start
+
+   logging.basicConfig(filename="pdf.log",level=logging.INFO,filemode="w") 
 
    parser=argparse.ArgumentParser()
 
    parser.add_argument("--prtfile",help="printer file", required=True)
    parser.add_argument("--pdfdir",help="pdf output directory",required=True)
    args= parser.parse_args()
+#
+#  open log file
+#
+
 
 #
 #  check parameters
 #
    if not os.path.isfile(args.prtfile):
-      print("line printer file "+args.prtfile+" does not exist")
+      logging.error("line printer file "+args.prtfile+" does not exist")
       sys.exit(1)
     
    if not os.path.exists(args.pdfdir):
-      print("pdf output directory "+args.prtfile+" does not exist")
+      logging.error("pdf output directory "+args.prtfile+" does not exist")
       sys.exit(1)
     
    exeFile=os.path.join(os.path.dirname(__file__),"lpt2pdf")
+   if platform.system() == "Windows":
+      exeFile+=".exe"
    if not os.path.isfile(exeFile):
-      print("lpt2pdf executable not found")
+      logging.error("lpt2pdf executable not found")
       sys.exit(1)
-      
 #
-#  open printer file and activate SIGQUIT handler
+#  write pid file
+#
+   writePidToFile("pdf.pid")
+#
+#  truncate printer file
+#
+   truncateFile(args.prtfile)
+#
+#  open printer file for read and activate SIGTERM handler
 #
    f=open(args.prtfile,"rb")
-   signal.signal(signal.SIGQUIT,finish)
+   signal.signal(signal.SIGTERM,finish)
    proc= None
-   print("print formatter started")
    eojCount=0;
    line=""
+   logging.info("NOS/BE print postprocessor started")
    while True:
 #
-#     if shutdown flag was set from the SIGQUIT handler, close input and exit
+#     if shutdown flag was set from the SIGTERM handler, close input and exit
 #
       if shutdown:
+         logging.info("NOS/BE print postprocessor finished")
+         logging.shutdown()
          f.close()
          break
 
@@ -170,6 +213,7 @@ def main():
          filename=args.pdfdir+"/print-"+datetime.datetime.now().strftime("%Y_%m_%d_%H_%M_%S")+".pdf"
          proc=subprocess.Popen([exeFile,"-tof","3","--",filename],stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
          start=True
+         logging.info("File "+filename+" opened")
 #
 #     output line with ANSI printer control
 #
@@ -185,6 +229,7 @@ def main():
          proc.communicate()
          proc.stdin.close()
          proc=None
+         logging.info("File "+filename+" closed")
          time.sleep(1)
 #
 #  shutdown the script
@@ -194,7 +239,6 @@ def main():
       proc.stdin.close()
       proc=None
    time.sleep(1)
-   print("print formatter shut down")
    
 if __name__ == "__main__":
    main()
