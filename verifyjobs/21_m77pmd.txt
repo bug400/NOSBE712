@@ -1,0 +1,29 @@
+M77PMD,T0.
+COMMENT. TEST M77 POST MORTEM DUMP
+M77,PMD,T=V,-GO.
+LGO.
+COMMENT. *** M77PMD COMPLETE ***
+EXIT(S)
+COMMENT. *** M77PMD FAILED ***
+~eor
+       PROGRAM TEST(TAPE6)
+       INTEGER A,B,C
+       REAL D
+       OPEN(6,FILE='OUTPUT')
+       A=0
+       B=0
+       CALL DIVIDE(A,B,C)
+       WRITE(6,100)C
+       D=SQRT(-1.0)
+       WRITE(6,110)D
+100    FORMAT(1X,I10)
+110    FORMAT(1X,F10.3)
+       STOP
+       END
+       SUBROUTINE DIVIDE(A,B,C)
+       INTEGER A,B,C
+       C=A/B
+       RETURN
+       END
+~eor
+~eoi

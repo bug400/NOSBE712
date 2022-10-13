@@ -1,0 +1,21 @@
+A60TST,T0.
+ALGOL5.
+LGO.
+COMMENT. *** A60TST COMPLETE ***
+EXIT(S)
+COMMENT. *** A60TST FAILED ***
+~eor
+"BEGIN"
+  "INTEGER" I1, I2, I3, N;
+  I1 := 0;
+  I2 := 1;
+  "FOR" N := 1 "STEP" 1 "UNTIL" 10 "DO"
+  "BEGIN"
+    OUTPUT (61, "("2ZD,15ZD/")", N, I2);
+    I3 := I1 + I2;
+    I1 := I2;
+    I2 := I3;
+  "END"
+"END"
+~eor
+~eoi

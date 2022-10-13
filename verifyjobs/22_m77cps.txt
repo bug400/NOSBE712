@@ -1,0 +1,27 @@
+M77CPS,T0.
+COMMENT. TEST M77 COMPASS INTERFACE
+M77.
+COMMENT. *** M77CPS COMPLETE ***
+EXIT(S)
+COMMENT. *** M77CPS FAILED ***
+~eor
+         PROGRAM TEST(OUTPUT,TAPE6=OUTPUT)
+         EXTERNAL SUM
+         INTEGER  SUM,RES
+         RES=SUM(1,2)
+         WRITE(6,100) RES
+100      FORMAT(1H1,I5)
+         STOP
+         END
+         IDENT  SUM
+         ENTRY  SUM
+SUM      BSS    1
+         SA2    A1+1
+         SA1    X1
+         SA2    X2
+         SB3    X2
+         SX6    X1+B3
+         EQ     SUM
+         END
+~eor
+~eoi

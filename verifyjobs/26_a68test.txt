@@ -1,0 +1,21 @@
+A68TST,T0.
+RFL,120000.
+REDUCE.
+A68.
+LGO.
+COMMENT. *** A68TST COMPLETE ***
+EXIT(S)
+COMMENT. *** A68TST FAILED ***
+~eor
+FIB:
+(
+  'INT' I1 := 0, I2 := 1;
+  'FOR' N 'FROM' 1 'TO' 10 'DO'
+    PRINT((N, " ", I2, NEWLINE));
+    'INT' I3 := I1 + I2;
+    I1 := I2;
+    I2 := I3
+  'OD'
+)
+~eor
+~eoi

@@ -1,0 +1,25 @@
+MNFTST.
+MNF.
+COMMENT. *** MNFTST COMPLETE ***
+EXIT(S)
+COMMENT. *** MNFTST FAILED ***
+~eor
+      PROGRAM FIB(OUTPUT, TAPE6=OUTPUT)
+C
+C     CALCULATE THE FIRST 10 FIBONACCI NUMBERS
+C
+      I1 = 0
+      I2 = 1
+
+      WRITE(6,5)
+5     FORMAT(1H1)
+      DO 20 N = 1, 10 
+        WRITE(6, 10) N, I2
+10      FORMAT(1X, I4, 2H: , I4)
+        I3 = I1 + I2
+        I1 = I2
+        I2 = I3
+20    CONTINUE
+      END
+~eor
+~eoi
