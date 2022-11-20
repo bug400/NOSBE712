@@ -6,4 +6,4 @@ if [ `basename ${PWD}` != "NOSBE712" ] ; then
    exit 1
 fi
 rm -f ../bootstrap650bootstrap.zip
-zip -r ../bootstrap650bootstrap.zip DeadstartTapes/DSTAPE.tap disks/bootstrap/DQ* persistence/bootstrap/*Sto*
+zip -r ../bootstrap650bootstrap.zip disks/bootstrap/DQ* persistence/bootstrap/*Sto*

@@ -6,4 +6,4 @@ if [ `basename ${PWD}` != "NOSBE712" ] ; then
    exit 1
 fi
 rm -f ../nosbe712build.zip
-zip -r ../nosbe712build.zip DeadstartTapes/DSTAPE_BUILD.tap disks/build/DQ* persistence/build/*Sto*
+zip -r ../nosbe712build.zip DeadstartTapes/DSTAPE_BUILDSYS.tap disks/build/DQ* persistence/build/*Sto*
