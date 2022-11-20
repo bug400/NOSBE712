@@ -6,5 +6,5 @@ if [ `basename ${PWD}` != "NOSBE712" ] ; then
    echo "Script must be called in the NOSBE712 directory"
    exit 1
 fi
-rm -f ../nosbe712nosbe_em.zip
-zip -r ../nosbe712nosbe_em.zip DeadstartTapes/DSTAPE_EM.tap disks/nosbe_em/DQ* persistence/nosbe_em/*Sto*
+rm -f ../nosbe712prod_em.zip
+zip -r ../nosbe712prod_em.zip DeadstartTapes/DSTAPE_EM.tap disks/nosbe_em/DQ* persistence/nosbe_em/*Sto*
