@@ -1,15 +1,13 @@
 #!/bin/sh
-# start and stop the pdf printfile formatter process
+# start and stop the nosbeformatter process
 
 curdir=$PWD
 case "$1" in
   start)
-        ./lpt2pdf/nosbeformatter.py --prtfile LP5xx_C12_E5 --pdfdir printfiles &
+        node lpt2pdf/nosbeformatter.js -p LP5xx_C12_E5 -s $curdir/printfiles  -o "-tof 3" > $curdir/pdf.log 2>&1  & 
 	;;
   stop)
-        if [ -f pdf.pid ]; then
-           kill `cat pdf.pid`
-        fi
+        kill `cat pdf.pid`
 	;;
   *)
 	echo "Usage: $0 {start|stop}"
