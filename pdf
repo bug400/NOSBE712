@@ -4,7 +4,7 @@
 curdir=$PWD
 case "$1" in
   start)
-        node lpt2pdf/nosbeformatter.js -p LP5xx_C12_E5 -s $curdir/printfiles  -o "-tof 3" > $curdir/pdf.log 2>&1  & 
+        node lpt2pdf/nosbeformatter.js -p LP5xx_C12_E5 -s $curdir/printfiles  -o "-tof 3 -require APPEND" > $curdir/pdf.log 2>&1  & 
 	;;
   stop)
         kill `cat pdf.pid`
