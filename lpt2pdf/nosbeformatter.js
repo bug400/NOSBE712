@@ -50,110 +50,193 @@ const process= require('process');
 
 const BufferSize=64*1024;
 
+/*
+ * command line parameter data
+ */
 var optInd=2;
 var printFile="";
 var optionString="";
 var spoolDir="";
 
-var position=0;
-var buffer= Buffer.alloc(BufferSize)
-var bytesRead;
-var line='';
-var eojCount=0;
-var child= null;
-var start= true;
-var options= [];
-var pid=process.pid;
-var isWin=process.platform=== "win32";
+/*
+ * subprocess status enums
+ */
+const Stat = {
+   Stopped: 0,
+   Starting: 1,
+   Running: 2,
+   Stopping: 3,
+}
 
 
+/*
+ * global variables
+ */
+var intervalObject;                   // timer interval object
+var position=0;                       // current position in printer file
+var buffer= Buffer.alloc(BufferSize); // printer file read buffer
+var bytesRead;                        // number of bytes in read buffer
+var line='';                          // assembled line from read buffer
+var eojCount=0;                       // no occurrences of the end of job mark
+var child= null;                      // child variable
+var beginOfJob= true;                 // true, if at beginning of a print job
+var options= [];                      // lpt2pdf options
+var pid=process.pid;                  // pid of our process
+var isWin=process.platform=== "win32";// true, if we run under Windows
+var status=Stat.Stopped;              // subprocess status
 
-// printFile watch event handler
-function handleEvent (curr,prev) {
-   if(curr.size > position) {
-      bytesRead=fs.readSync(printFileDesc,buffer,0,curr.size-position);
-      for(var i=0;i< bytesRead; i++) {
-         if (buffer[i]==10) {
-            processLine(line);
-            line='';
-         } else {
-           line+=String.fromCharCode(buffer[i]);
+
+/*
+ * The print file watch event handler is called every 250ms
+ * If the file size changed the new contend is read into "buffer"
+ * The buffer content is processed line by line and each line is
+ * sent to the processLine subroutine.
+ * If the line could not be processed by the processLine subroutine
+ * because a previous lpt2pdf subprocess did not start or terminate in time,
+ * then the function exits and the remaining data must be processed
+ * during the next scheduled event
+ */
+
+function watchPrintFile() {
+
+   var requiredBufferSize;
+
+   fs.stat(printFile, (err,curr)=> {
+
+      if(err) {
+         console.log('cannot access printer file');
+      } else {
+         // file size did change
+         if(curr.size > position) {
+
+            // no running subprocess, issue starting it
+            if(status==Stat.Stopped) {
+               startSubProcess();
+               return;
+            }
+
+            // the subprocess is up and running, process data
+            if(status==Stat.Running) {
+
+               // prevent overflow of  buffer, if there are more bytes to read
+               // then they must be processed in the next schedule of this
+               // function
+               requiredBufferSize=curr.size-position;
+               if(requiredBufferSize>BufferSize) requiredBufferSize= BufferSize;
+               bytesRead=fs.readSync(printFileDesc,buffer,0,requiredBufferSize,position);
+               for(var i=0;i< bytesRead; i++) {
+                  // build line from buffer data
+                  if (buffer[i]==10) {
+                     if(processLine(line)) {
+                        position+=1;
+                        line='';
+                     } else {
+                        // we could not process the line, redo it in the
+                        // next schedule
+                        position-=line.length;
+                        line='';
+                        break;
+                     }
+                  } else {
+                    line+=String.fromCharCode(buffer[i]);
+                    position+=1;
+                  }
+               }
+            }
          }
       }
-   }
-   position=curr.size;
+   });
    return;
+}
+
+// start PDF converter subprocess
+function startSubProcess() {
+
+   // assemble time stamped file name
+   let date_ob = new Date();
+   let date = ("0" + date_ob.getDate()).slice(-2);
+   let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+   let year = date_ob.getFullYear();
+   let hours = ("0" +date_ob.getHours()).slice(-2);
+   let minutes = ("0"+date_ob.getMinutes()).slice(-2);
+   let seconds = ("0"+date_ob.getSeconds()).slice(-2);
+   let pdfFileName=path.join(spoolDir,"print_"+year+"_"+month+"_"+date+"_"+hours+"_"+minutes+"_"+seconds+".pdf");
+
+   // spawn pdf print file generator lpt2pdf
+   let exeFile=path.join(__dirname,"lpt2pdf");
+   if(isWin) {
+      exeFile+=".exe";
+   }
+   let opts=options.concat('--',pdfFileName);
+   child=child_process.spawn(exeFile,opts,{detached: true} );
+   child.stdout.pipe(process.stdout);
+   child.stderr.pipe(process.stderr);
+   child.stdin.setEncoding('utf8');
+   console.log("spawned .....");
+   status=Stat.starting;
+
+   // the subprocess is completely shut down if this event was fired
+   // and status was set to Stat.Stopped
+   child.on('close',(code,signal) => {
+      status=Stat.Stopped;
+      console.log(`child process terminated ${code} ${signal}`);
+   });
+
+   // the subprocess is up and running, if this event was fired and status
+   // was set to Stat.Running.
+   child.on('spawn',function()  {
+      status=Stat.Running;
+      console.log(`spawned ${exeFile} ${opts}`);
+   });
 }
 
 // process line function
 function processLine(line) {
+var outLine="";
+
    if(line.length==0) {
-      return;
+      return(true);
    }
    // check for end of print job
    if(line.includes(' //// END OF LIST ////  ')) {
       eojCount+=1;
    }
-   // start PDF converter, if not already running
-   if (child== null) {
-      // assemble time stamped file name
-      let date_ob = new Date();
-      let date = ("0" + date_ob.getDate()).slice(-2);
-      let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
-      let year = date_ob.getFullYear();
-      let hours = ("0" +date_ob.getHours()).slice(-2);
-      let minutes = ("0"+date_ob.getMinutes()).slice(-2);
-      let seconds = ("0"+date_ob.getSeconds()).slice(-2);
-      let pdfFileName=path.join(spoolDir,"print_"+year+"_"+month+"_"+date+"_"+hours+"_"+minutes+"_"+seconds+".pdf");
-      // spawn pdf print file generator lpt2pdf
-      let exeFile=path.join(__dirname,"lpt2pdf");
-      if(isWin) {
-         exeFile+=".exe";
-      }
-      let opts=options.concat('--',pdfFileName);
-      child=child_process.spawn(exeFile,opts,{detached: true} );
-      child.stdout.pipe(process.stdout);
-      child.stderr.pipe(process.stderr);
-      child.stdin.setEncoding('utf8');
-      start= true;
-      console.log("spawned .....");
-      child.on('close',(code,signal) => {
-         console.log(`child process terminated ${code} ${signal}`);
-      });
-      child.on('spawn',function()  {
-         console.log(`spawned ${exeFile} ${opts}`);
-      });
-   }
    // do form feed, but only if we are not at the beginning of a print job
    if (line[0]=='1') {
-      if(start) {
-         start=false
+      if(beginOfJob) {
+         beginOfJob=false
       } else {
-         child.stdin.write('\f');
+         outLine+='\f';
       }
    }
    // double line feed
    if (line[0]=='0') {
-      child.stdin.write('\n');
+      outLine+='\n';
    }
    // overprint not supported by lpt2pdf
    if(line[0]=='+') {
-      child.stdin.write(' ');
+      outLine+=' ';
    }
    // print line
    if(line.length > 1) {
-      child.stdin.write(line.substring(1));
+      outLine+=line.substring(1);
    }
-   child.stdin.write('\n');
-   
+   outLine+='\n';
+   if(status== Stat.Running) {
+      child.stdin.write(outLine);
+   } else {
+      // we probably got a status change
+      return(false);
+   }
    // end of print job, terminate lpt2pdf
    if(eojCount==2) {
       eojCount=0;
       child.stdin.end();
-      child=null;
+      beginOfJob=true;
+      status=Stat.stopping;
       console.log("end .......");
    }
-   return;
+   return(true);
 }
 
 // print script usage and exit
@@ -168,6 +251,7 @@ function printUsage() {
 
 // exit handler
 function exitNormal() {
+   clearInterval(intervalObject);
    fs.closeSync(printFileDesc);
    console.log("SIGTERM received, terminating...");
    process.exit(0);
@@ -202,8 +286,10 @@ fs.closeSync(fs.openSync(printFile, 'w'))
 // open printer file for read
 printFileDesc=fs.openSync(printFile);
 
-// watch printer file
-fs.watchFile(printFile,{persistent:true, interval:250}, handleEvent);
+// start interval timer
+intervalObject=setInterval(() => {
+   watchPrintFile();
+},250);
 console.log("start watching printer file:",printFile);
 
 // write pid file
