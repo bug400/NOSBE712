@@ -41,5 +41,5 @@ dt.connect()
 .then(() => dt.say('removing cards from CP33'))
 .then(() => dt.removeCards()
  .then(() => { process.exit(0); })
- .catch(err => { DtTools.error(err) });
+ .catch(err => { dt.error(err) }));
 
