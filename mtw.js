@@ -39,4 +39,4 @@ dt.connect()
 .then(() => dt.say("Connected to DtCyber"))
 .then (() => dt.mountTape(true,process.argv[2],process.argv[3]))
 .then(() => { process.exit(0); })
-.catch(err => { DtTools.error(err) });
+.catch(err => { dt.error(err) });
