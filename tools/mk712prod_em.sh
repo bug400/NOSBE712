@@ -7,4 +7,4 @@ if [ `basename ${PWD}` != "NOSBE712" ] ; then
    exit 1
 fi
 rm -f ../nosbe712prod_em.zip
-zip -r ../nosbe712prod_em.zip DeadstartTapes/DSTAPE_EM.tap disks/nosbe_em/DQ* persistence/nosbe_em/*Sto*
+zip -r ../nosbe712prod_em.zip DeadstartTapes/DSTAPE_EM.tap disks/nosbe_em/DQ* persistence/nosbe_em/*Sto* scratch/DUMPF_EM.tap
