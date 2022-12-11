@@ -6,15 +6,14 @@
  The executable of the lpt2pdf program is expected in the lpt2pdf
  subdirectory.
 
- nosbeformatter must be called with the following parameters:
+ nosbeformatter must be called with the following required parameters:
  -p        DtCyber printer file
  -s        subdirectory for the PDF files
 
- Optionally optinally options can be passed to the lpt2pdf program:
+Optional parameters: 
 
- -o "lpt2pdf parameters"
-
- which must be enclosed in "".
+ -o        lpt2pdf parameters (which must be enclosed in "")
+ -l        lines per page (default: 60)
 
  Example:
 
@@ -49,6 +48,7 @@ const child_process= require("child_process");
 const process= require('process');
 
 const BufferSize=64*1024;
+const TimerValue=500;
 
 /*
  * command line parameter data
@@ -57,6 +57,7 @@ var optInd=2;
 var printFile="";
 var optionString="";
 var spoolDir="";
+var linesPerPage=60;
 
 /*
  * subprocess status enums
@@ -67,6 +68,17 @@ const Stat = {
    Running: 2,
    Stopping: 3,
 }
+
+/*
+ * ANSI function codes (3256 controller)
+ */
+const PrintDefault  = ' ';
+const PrintSingle   = '0';
+const PrintDouble   = '-';
+const PrintLastLine = 'C';
+const PrintEject    = '1';
+const PrintAutoEject= 'R';
+const PrintNoSpace  = '+';
 
 
 /*
@@ -84,10 +96,13 @@ var options= [];                      // lpt2pdf options
 var pid=process.pid;                  // pid of our process
 var isWin=process.platform=== "win32";// true, if we run under Windows
 var status=Stat.Stopped;              // subprocess status
+var lineCount;                        // line counter on page
+var pageCount;                        // page count
+var eventRunning=false;
 
 
 /*
- * The print file watch event handler is called every 250ms
+ * The print file watch event handler is called every 500ms
  * If the file size changed the new contend is read into "buffer"
  * The buffer content is processed line by line and each line is
  * sent to the processLine subroutine.
@@ -100,6 +115,12 @@ var status=Stat.Stopped;              // subprocess status
 function watchPrintFile() {
 
    var requiredBufferSize;
+
+   
+   if(eventRunning)return;
+   eventRunning=true;
+   // take the next bus, if subprocess is starting or terminating
+   if((status != Stat.Stopped) && (status != Stat.Running)) return;
 
    fs.stat(printFile, (err,curr)=> {
 
@@ -115,43 +136,47 @@ function watchPrintFile() {
                return;
             }
 
-            // the subprocess is up and running, process data
-            if(status==Stat.Running) {
-
-               // prevent overflow of  buffer, if there are more bytes to read
-               // then they must be processed in the next schedule of this
-               // function
-               requiredBufferSize=curr.size-position;
-               if(requiredBufferSize>BufferSize) requiredBufferSize= BufferSize;
-               bytesRead=fs.readSync(printFileDesc,buffer,0,requiredBufferSize,position);
-               for(var i=0;i< bytesRead; i++) {
-                  // build line from buffer data
-                  if (buffer[i]==10) {
-                     if(processLine(line)) {
-                        position+=1;
-                        line='';
-                     } else {
-                        // we could not process the line, redo it in the
-                        // next schedule
-                        position-=line.length;
-                        line='';
-                        break;
+            // prevent overflow of  buffer, if there are more bytes to read
+            // then they must be processed in the next schedule of this function
+            requiredBufferSize=curr.size-position;
+            if(requiredBufferSize>BufferSize) requiredBufferSize= BufferSize;
+            bytesRead=fs.readSync(printFileDesc,buffer,0,requiredBufferSize,position);
+            for(var i=0;i< bytesRead; i++) {
+               // build line from buffer data
+               if (buffer[i]==10) {
+                  if(processLine(line)) {
+                     position+=1;
+                     line='';
+                     // processLine terminated the subprocess, bail out
+                     if(status== Stat.Stopping) {
+                        eventRunning=false;
+                        return;
                      }
                   } else {
-                    line+=String.fromCharCode(buffer[i]);
-                    position+=1;
+                     // we could not process the line, redo it in the
+                     // next schedule
+                     position-=line.length;
+                     line='';
+                     break;
                   }
+               } else {
+                  line+=String.fromCharCode(buffer[i]);
+                  position+=1;
                }
             }
          }
       }
    });
+   eventRunning=false;
    return;
 }
 
 // start PDF converter subprocess
 function startSubProcess() {
 
+   // init job vars
+   pageCount=0;
+   lineCount=0;
    // assemble time stamped file name
    let date_ob = new Date();
    let date = ("0" + date_ob.getDate()).slice(-2);
@@ -173,13 +198,16 @@ function startSubProcess() {
    child.stderr.pipe(process.stderr);
    child.stdin.setEncoding('utf8');
    console.log("spawned .....");
-   status=Stat.starting;
+   status=Stat.Starting;
 
    // the subprocess is completely shut down if this event was fired
    // and status was set to Stat.Stopped
    child.on('close',(code,signal) => {
       status=Stat.Stopped;
-      console.log(`child process terminated ${code} ${signal}`);
+      console.log(`child process terminated with exit code ${code} and signal ${signal}`);
+      if( code !=0) {
+         process.exit(code);
+      }
    });
 
    // the subprocess is up and running, if this event was fired and status
@@ -188,11 +216,18 @@ function startSubProcess() {
       status=Stat.Running;
       console.log(`spawned ${exeFile} ${opts}`);
    });
+
+   child.on('error',(err) => {
+      console.log(`subprocess error ${err}`);
+      process.exit(1);
+   });
 }
 
-// process line function
+/*
+ * process line function, parse and execute the ANSI function codes
+ */
 function processLine(line) {
-var outLine="";
+var outLine;
 
    if(line.length==0) {
       return(true);
@@ -201,39 +236,79 @@ var outLine="";
    if(line.includes(' //// END OF LIST ////  ')) {
       eojCount+=1;
    }
-   // do form feed, but only if we are not at the beginning of a print job
-   if (line[0]=='1') {
-      if(beginOfJob) {
-         beginOfJob=false
-      } else {
-         outLine+='\f';
-      }
+   switch(line[0]) {
+
+       case PrintDefault:
+        // "normal" line
+        outLine='\n';
+        lineCount+=1;
+        break;
+
+      case PrintEject:
+         // do form feed, but only if we are not at the beginning 
+         // of a print job
+         pageCount+=1;
+         lineCount=1;
+         if(beginOfJob) {
+            beginOfJob=false
+            outLine='';
+         } else {
+            outLine='\f';
+         }
+         break;
+
+      case PrintSingle:
+        // space two lines
+        outLine='\n\n';
+        lineCount+=2;
+        break;
+
+      case PrintDouble:
+        // space three lines
+        outLine='\n\n';
+        // this is a very dirty hack because JANUS outputs the banner page with
+        // 8lpi even if NOS/BE is configured to 6lpi. Thus we steal a blank line
+        // if we are on the first two pages of the print job
+        lineCount+=2;
+        if(pageCount>2) {
+           outLine+='\n';
+           lineCount+=1;
+        }
+        break;
+
+      case PrintLastLine:
+        // advance to last line of the page
+        outLine='';
+        for(var i=0;i<(linesPerPage-lineCount);i++) {
+           outLine+='\n';
+        }
+        break;
+
+      case PrintNoSpace:
+        // overprinting: no lf, send only a cr
+        outLine='\r';
+        break;
+
+      default:
+        // all other: do not output anything
+        return(true);
    }
-   // double line feed
-   if (line[0]=='0') {
-      outLine+='\n';
-   }
-   // overprint not supported by lpt2pdf
-   if(line[0]=='+') {
-      outLine+=' ';
-   }
-   // print line
+   // append line data, if any
    if(line.length > 1) {
       outLine+=line.substring(1);
    }
-   outLine+='\n';
-   if(status== Stat.Running) {
-      child.stdin.write(outLine);
-   } else {
-      // we probably got a status change
-      return(false);
+   // append final "\n", if end of job
+   if(eojCount==2) {
+      outLine+='\n';
    }
+   // output line to pdf converter child process
+   child.stdin.write(outLine);
    // end of print job, terminate lpt2pdf
    if(eojCount==2) {
       eojCount=0;
       child.stdin.end();
       beginOfJob=true;
-      status=Stat.stopping;
+      status=Stat.Stopping;
       console.log("end .......");
    }
    return(true);
@@ -241,7 +316,7 @@ var outLine="";
 
 // print script usage and exit
 function printUsage() {
-   console.log('Usage: pdfwatcher -p <printer file> -s <spool dir> [-o "lpt2pdf options"]');
+   console.log('Usage: pdfwatcher -p <printer file> -s <spool dir> [-o "lpt2pdf options"] -l [lines per page (default:60)');
    console.log('       lpt2pdfoptions must be encosed in "');
    console.log('');
    console.log('Example: node nosbeformatter.js -p LP5xx_C12_E5 -s printfiles -o "-tof 3"');
@@ -269,12 +344,28 @@ while (optInd < process.argv.length) {
       optionString= process.argv[optInd+1];
       options=optionString.split(' ');
       optInd+=2;
+   } else if (process.argv[optInd] === "-l") {
+      linesPerPage= Number(process.argv[optInd+1]);
+      if (isNaN(linesPerPage)) {
+         printUsage();
+      }
+      optInd+=2;
    } else {
       printUsage();
    }
 }
+
+// check parameters
 if ( printFile ==="" ) printUsage();
 if ( spoolDir ==="" ) printUsage();
+if ( ! fs.existsSync(spoolDir)) {
+   console.log(`spool directory ${spoolDir} does not exist`);
+   process.exit(1);
+}
+if (linesPerPage < 40 || linesPerPage> 80) {
+   console.log(`invalid value ${linesPerPage} for lines per page`);
+   process.exit(1);
+}
 if(optionString !== "") console.log("lpt2pdf options:",optionString);
 
 // activate sigterm handler
@@ -289,7 +380,7 @@ printFileDesc=fs.openSync(printFile);
 // start interval timer
 intervalObject=setInterval(() => {
    watchPrintFile();
-},250);
+},TimerValue);
 console.log("start watching printer file:",printFile);
 
 // write pid file
