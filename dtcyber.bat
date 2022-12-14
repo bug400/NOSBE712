@@ -1,6 +1,6 @@
 @echo off
 if defined DTCYBER (
-%DTCYBER%\bin\dtcyber
+%DTCYBER%\dtcyber
 )else (
-..\bin\dtcyber
+..\dtcyber
 )

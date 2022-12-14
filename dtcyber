@@ -1,7 +1,7 @@
 #!/bin/bash
 # This scripts launches the DtCyber emulator
 if [ -z "${DTCYBER}" ] ; then
-   ../bin/dtcyber $1
+   ../dtcyber $1
 else
-   $DTCYBER/bin/dtcyber $1
+   $DTCYBER/dtcyber $1
 fi
