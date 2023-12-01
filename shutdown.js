@@ -39,7 +39,7 @@ const dtc = new DtCyber();
 dtc.connect()
 .then(() => dtc.expect([ {re:/Operator> $/} ]))
 .then(() => dtc.say("Connected to DtCyber"))
-.then(() => dtc.dsd("[RDF,DROP."))
+.then(() => dtc.dsd("[INTERCOM,DR"))
 .then(() => dtc.dsd("[1.DR"))
 .then(() => dtc.dsd("[UNLOCK."))
 .then(() => dtc.dsd("CHECK#2000#"))
