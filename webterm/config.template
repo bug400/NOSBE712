@@ -1,0 +1,15 @@
+{
+  "port": 8001,
+  "httpRoot": "REPLACEME/webterm/www",
+  "machines":
+  [
+    {
+      "id": "BBB",
+      "title": "NOS/BE 1.5 L712",
+      "host": "%../cyber.ini|nosbe|ipAddress|127.0.0.1",
+      "port": 6610,
+      "protocol": "telnet",
+      "terminal": "aterm.html?m=BBB&t=NOS/BE%201.5%20L712%20on%20CYBER%20170-865"
+    }
+  ]
+}
