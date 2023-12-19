@@ -6,7 +6,7 @@
 if /I "%1"=="start" (
    setlocal
    cd webterm
-   node genconfig
+   node genconfig config.template config.json
    if defined DTCYBER (
       start "WebTerm-Server" cmd /c node %DTCYBER%\webterm\webterm-server -p webterm.pid config.json
    ) else (

@@ -25,7 +25,7 @@ var replacement;
 if (process.env.DTCYBER) {
    replacement=process.env.DTCYBER.replaceAll('\\','/');
 } else {
-   replacement='..'
+   replacement='../..'
 }
 
 var fs = require('fs')

@@ -4,7 +4,7 @@ cd webterm
 
 case "$1" in
   start)
-        node genconfig.js
+        node genconfig.js config.template config.json
         if [ -z "${DTCYBER}" ] ; then
             node ../../webterm/webterm-server -p webterm.pid config.json >webterm.log 2>&1 &
         else

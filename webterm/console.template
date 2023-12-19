@@ -5,19 +5,19 @@
   [
     {
       "id": "BBB",
-      "title": "NOS/BE 1.5 L712 (2D)",
+      "title": "NOS/BE 1.5 L712 (Console-2D)",
       "host": "%../cyber.ini|nosbe|ipAddress|127.0.0.1",
       "port": 16612,
       "protocol": "raw",
       "terminal": "console.html?m=BBB&t=NOS/BE%201.5%20L712%20on%20CYBER%20170-865"
     },
     {
-      "id": "BBB-3d",
-      "title": "NOS/BE 1.5 L712 (3D)",
+      "id": "BBB-3D",
+      "title": "NOS/BE 1.5 L712 (Console-3D)",
       "host": "%../cyber.ini|nosbe|ipAddress|127.0.0.1",
       "port": 16612,
       "protocol": "raw",
-      "terminal": "console3d.html?m=BBB-3d&t=NOS/BE%201.5%20L712%20on%20CYBER%20170-865"
+      "terminal": "console3d.html?m=BBB-3D&t=NOS/BE%201.5%20L712%20on%20CYBER%20170-865"
     }
   ]
 }

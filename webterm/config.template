@@ -5,7 +5,7 @@
   [
     {
       "id": "BBB",
-      "title": "NOS/BE 1.5 L712",
+      "title": "NOS/BE 1.5 L712 (WebTerm)",
       "host": "%../cyber.ini|nosbe|ipAddress|127.0.0.1",
       "port": 6610,
       "protocol": "telnet",
